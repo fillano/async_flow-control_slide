@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>活用非同步與流程控制</title>
+
+		<meta name="description" content="A course on async and flow control in Javascript">
+		<meta name="author" content="Fillano(Hsu Ping Feng)">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<style>
+		.mynote {
+			color: #C97;
+			text-decoration: underline;
+			font-weight: bolder;
+		}
+		</style>
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+<!--
+				<section data-markdown>
+					<script type="text/template">
+					</script>
+				</section>
+-->
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+<!-- #title -->
+				<section data-markdown>
+					<script type="text/template">
+					#活用非同步與流程控制
+
+					&nbsp;
+
+					&nbsp;
+
+					###Fillano
+					24th, April, 2016
+					</script>
+				</section>
+<!-- ##introduce -->
+				<section data-markdown>
+					<script type="text/template">
+					##自我介紹
+					* 本名：馮旭平
+					* 渾名：Fillano、費大公...
+					* 出沒地點：iT邦幫忙、FB、Twitter、Plurk、G+...
+					* Javascript愛好者
+					* 卑微軟體工程師，工作花在網站後端略多於前端
+					* 主要使用語言有Java、PHP、C#、Javascript、HTML、CSS等
+					</script>
+				</section>
+<!-- ##關於Flying ITMan -->
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+						##關於Flying ITMan
+						* 幾位常在IT邦分享的邦友討論，延讀去年[IT技術講堂]的活動。我們計劃今年更完整的IT技術分享活動
+						* Simon和小雨大、老鷹及費大公四人，今年就每個月一個主題的方式來面對面分享我們在 IT 技術上的實務經驗。
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+						##Flying ITMan四大主軸
+						1. Linux 平台及 MySQL 資料庫系統管理，由小雨大和老鷹來主持，將著重在進階的Linux 系統管理及 MySQL 資料庫效能調校等技術分享。
+						2. Windows Server 平台及 SQL Server資料庫系統管理，暫時由Simon來主持，分享的重點和小雨大及老鷹在 Linux及 MySQL 相同，只是在微軟產品方面而已。
+						3. Erlang 、 Golang 和平行處理技術，由小雨大來分享在 Erlang 、 Golang 的設計經驗，以及平行處理架構設計等等。
+						4. Web 前後端開發技術分享，由費大公和老鷹來分享 Web Server 性能調校及如何設計有效率的網站前後端程式。
+						5. 不時還有學有專精的邦友分享各種心得
+						</script>
+					</section>
+				</section>
+<!-- ##大綱 -->
+				<section data-markdown>
+					<script type="text/template">
+					##大綱
+					* 課程目標
+					* 非同步的基礎
+					* 古典的作法：callback
+					* 現代一點：使用caolan的async模組
+					* 使用ECMAScript2015的新特性
+						* Promise
+						* Generator / Iterator
+					</script>
+				</section>
+<!-- #課程目標 -->
+				<section data-markdown>
+					<script type="text/template">
+					#課程目標
+					</script>
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+					* 時間：約兩小時
+					* 目標：建立對Javascript中async機制的了解，並且學習怎樣用更好的方式來控制程式流程
+					* 示例：簡單的程式碼，用來理解新功能
+					* 特殊效果：如果在瀏覽器可執行，會出現執行按鈕
+					</script>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
